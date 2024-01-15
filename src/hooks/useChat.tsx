@@ -4,13 +4,14 @@ import { useDispatch,  } from "react-redux";
 import { v4 as uuid } from 'uuid';
 import { Dispatch } from '../store'
 import send from "./socketSender";
+import { UserModel } from "../models/chat";
 
 
 // eslint-disable-next-line no-restricted-globals
 const SOCKET_SERVER_URL = `ws://${location.hostname}:8077`; //TODO make this lintable
 
 
-const buildChat = (token:string, sockId:string, dispatch: Dispatch) => {
+const buildChat = (token:string, sockId:string, name:string, dispatch: Dispatch) => {
   const ws = new WebSocket(SOCKET_SERVER_URL);
   ws.onclose = (e) => {
     console.log(e)
@@ -24,7 +25,7 @@ const buildChat = (token:string, sockId:string, dispatch: Dispatch) => {
     console.log(e);
     console.log('CONNECTION ESTABLISHED');
     console.log("Sending token:", token)
-    send(ws, "AUTH", sockId, { token });
+    send(ws, "AUTH", sockId, { token, name});
   };
   ws.onmessage = messageHandler(dispatch);
   return ws;
@@ -51,6 +52,10 @@ const messageHandler = (dispatch:Dispatch) => (event:{data:string}) => {
       dispatch.chat.SET_USERS(data.users);
       break;
     }
+    case 'MESSAGE_ADD': {
+      dispatch.chat.APPEND_MESSAGE(data.message);
+      break;
+    }
     case 'USER_LEAVE': {
       dispatch.chat.USER_LEAVE(data.user);
       break;
@@ -70,18 +75,18 @@ const messageHandler = (dispatch:Dispatch) => (event:{data:string}) => {
   }
 };
 
-const useChat = () => {
+const useChat = (user:UserModel) => {
   const dispatch = useDispatch<Dispatch>();
   const sockId = uuid();
   const socketRef = useRef<WebSocket>();
 
   useEffect(() => {
-    const ws = buildChat(sockId, sockId, dispatch);
+    const ws = buildChat(sockId, sockId, user.name, dispatch);
     socketRef.current = ws;
     return () => {
       socketRef.current?.close();
     };
-  }, [dispatch, sockId]);
+  }, [dispatch, sockId, user.name]);
 
 
   const socketSend = (command:string, data:Object) => {

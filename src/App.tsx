@@ -1,11 +1,15 @@
 //@ts-check
-import React from 'react';
-import { AppShell, Burger, Button, Stack, Grid } from '@mantine/core';
+import React, { useEffect } from 'react';
+import { AppShell, Burger, Stack, Grid } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Chat from './Chat';
+import { useSelector } from 'react-redux';
+import { RootState } from './store';
+import RegisterUser from './RegisterUser';
 
 const App = ( ) => {
   const [opened, { toggle }] = useDisclosure();
+  const userState = useSelector((state:RootState) => state.user);
   return (
     <AppShell
       padding="md"
@@ -30,7 +34,7 @@ const App = ( ) => {
         </Stack>
       </AppShell.Navbar>
       <AppShell.Main>
-        <Chat></Chat>
+        {userState.name ? <Chat/> : <RegisterUser/>}
       </AppShell.Main>
     </AppShell>
   )

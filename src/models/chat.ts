@@ -5,7 +5,7 @@ export interface MessageModel {
   id: string,
   message: string,
   from: string,
-  at: Date
+  at: string
 }
 
 export interface UserModel {
@@ -25,39 +25,32 @@ export const chat = createModel<RootModel>()({
     messages: [],
     users: []
   } as ChatState,
-  selectors: (slice, createSelector) => ({
-    messagesSelector() {
-      return slice((cart) => cart.messages)
-    },
-    userSelector() {
-      return slice((cart) => cart.users)
-    },
-  }),
   reducers: {
     SET_CHANNEL_INFO: (state: ChatState, payload: { messages: MessageModel[], users: UserModel[] }) => {
-      return Object.assign(state, payload);
+      return Object.assign({}, state, payload);
     },
     SET_MESSAGES: (state: ChatState, messages: MessageModel[]) => {
-      return Object.assign(state, { messages });
+      return Object.assign({}, state, { messages });
     },
     SET_USERS: (state: ChatState, users: UserModel[]) => {
-      return Object.assign(state, { users });
+      return Object.assign({}, state, { users });
     },
     USER_JOIN: (state: ChatState, user: UserModel) => {
+      console.log(state.users)
       if (state.users.find((u) => u.id === user.id)) {
         return state; // User already present in local state
       }
-      return Object.assign(state, { users: [...state.users, user] });
+      return Object.assign({}, state, { users: [...state.users, user] });
     },
     USER_LEAVE: (state: ChatState, user: UserModel) => {
       const filtered = state.users.filter(u => u.id !== user.id);
       if (filtered.length === state.users.length) {
         return state; // User must not be in local state
       }
-      return Object.assign(state, { users: filtered });
+      return Object.assign({}, state, { users: filtered });
     },
     APPEND_MESSAGE: (state: ChatState, message: MessageModel) => {
-      return Object.assign(state, { users: [...state.messages, message] });
+      return Object.assign({}, state, { messages: [...state.messages, message] });
     }
   }
 })
