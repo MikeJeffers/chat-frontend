@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Table } from '@mantine/core';
 import { useSelector } from 'react-redux';
-import { RootState } from './store';
+import { RootState } from '../store';
 
 
 const chatRow = (message: string, from: string, at: string) => {

@@ -1,15 +1,13 @@
 //@ts-check
-import React, { useEffect } from 'react';
-import { AppShell, Burger, Stack, Grid } from '@mantine/core';
+import React, {PropsWithChildren} from 'react';
+import { AppShell, Burger, Stack, Grid, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import Chat from './Chat';
-import { useSelector } from 'react-redux';
-import { RootState } from './store';
-import RegisterUser from './RegisterUser';
+import { Link } from 'react-router-dom';
 
-const App = ( ) => {
+interface ShellProps {}
+
+const App = (props:PropsWithChildren<ShellProps>) => {
   const [opened, { toggle }] = useDisclosure();
-  const userState = useSelector((state:RootState) => state.user);
   return (
     <AppShell
       padding="md"
@@ -30,11 +28,14 @@ const App = ( ) => {
         </Grid>
       </AppShell.Header>
       <AppShell.Navbar hidden={!opened} p="xs">
-        <Stack>
+      <Stack>
+          <Link to="/register" style={{ textDecoration: 'none' }}><Button fullWidth>Register</Button></Link>
+          <Link to="/login" style={{ textDecoration: 'none' }}><Button fullWidth>Login</Button></Link>
+          <Link to="/chat" style={{ textDecoration: 'none' }}><Button fullWidth>Play</Button></Link>
         </Stack>
       </AppShell.Navbar>
       <AppShell.Main>
-        {userState.name ? <Chat/> : <RegisterUser/>}
+        {props.children}
       </AppShell.Main>
     </AppShell>
   )

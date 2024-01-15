@@ -5,8 +5,16 @@ import React from 'react';
 import { Provider } from 'react-redux'
 import { MantineProvider } from '@mantine/core';
 import ReactDOM from 'react-dom/client';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 import { store } from './store'
-import App from './App';
+import FourOFour from './pages/FourOFour';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Chat from './pages/Chat';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,7 +23,15 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <MantineProvider defaultColorScheme="dark">
-        <App />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="*" element={<FourOFour />} />
+          </Routes>
+        </BrowserRouter>
       </MantineProvider>
     </Provider>
   </React.StrictMode>

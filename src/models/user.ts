@@ -4,7 +4,8 @@ import type { RootModel } from '.'
 
 export interface UserModel {
   id: string,
-  name: string
+  name: string,
+  token: string
 }
 
 
@@ -13,14 +14,12 @@ type UserState = UserModel;
 export const user = createModel<RootModel>()({
   state: {
     id: '',
-    name: ''
+    name: '',
+    token: ''
   } as UserState,
   reducers: {
-    SET_NAME: (state: UserState, name: string) => {
-      return Object.assign({}, state, { name });
-    },
-    SET_ID: (state: UserState, id: string) => {
-      return Object.assign({}, state, { id });
+    SET: (state: UserState, payload: {token:string, id:string, name:string}) => {
+      return Object.assign({}, state, payload);
     }
   }
 })

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { v4 as uuid } from 'uuid';
 import { Dispatch } from '../store'
 import send from "./socketSender";
-import { UserModel } from "../models/chat";
+import { UserModel } from "../models/user";
 
 
 // eslint-disable-next-line no-restricted-globals
@@ -75,13 +75,13 @@ const messageHandler = (dispatch:Dispatch) => (event:{data:string}) => {
   }
 };
 
-const useChat = (user:UserModel) => {
+const useChat = (user: UserModel) => {
   const dispatch = useDispatch<Dispatch>();
   const sockId = uuid();
   const socketRef = useRef<WebSocket>();
 
   useEffect(() => {
-    const ws = buildChat(sockId, sockId, user.name, dispatch);
+    const ws = buildChat(user.token, sockId, user.name, dispatch);
     socketRef.current = ws;
     return () => {
       socketRef.current?.close();
