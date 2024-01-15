@@ -1,6 +1,9 @@
 //@ts-check
 import React from 'react';
 import { AppShell, Burger, Button, Grid, Stack, Table } from '@mantine/core';
+import { useSelector } from 'react-redux';
+import { RootState } from './store';
+import useChat from './hooks/useChat';
 
 const chatRow = (message: string, from: string, at: Date) => {
   return (<Table.Tr>
@@ -11,12 +14,8 @@ const chatRow = (message: string, from: string, at: Date) => {
 }
 
 const Chat = () => {
-  const data = [
-    { message: 'hi', from: 'userA', at: new Date() },
-    { message: 'wow hi what is this', from: 'userB', at: new Date() },
-    { message: 'clearly some mock data', from: 'snarkyFella', at: new Date() },
-  ];
-  const rows = data.map(d => chatRow(d.message, d.from, d.at));
+  const chatState = useSelector((state:RootState) => state.chat);
+  const rows = chatState.messages.map(d => chatRow(d.message, d.from, d.at));
   return (
     <Grid justify="center" gutter={6} columns={12}>
       <Grid.Col>
