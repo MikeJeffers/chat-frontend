@@ -1,6 +1,6 @@
 //@ts-check
 import { useEffect, useRef } from "react";
-import { useDispatch,  } from "react-redux";
+import { useDispatch } from "react-redux";
 import { v4 as uuid } from 'uuid';
 import { Dispatch } from '../store'
 import send from "./socketSender";
