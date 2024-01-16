@@ -1,6 +1,6 @@
 //@ts-check
 import React from 'react';
-import { Table } from '@mantine/core';
+import { ScrollArea, Table } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
@@ -17,9 +17,20 @@ const ChatMessages = () => {
   const messages = useSelector((state: RootState) => state.chat.messages);
   const rows = messages.map(m => chatRow(m.message, m.from, m.at));
   return (
-    <Table>
-      {rows}
-    </Table>
+    <ScrollArea h={'50vh'} scrollbarSize={20} scrollHideDelay={2000}>
+      <Table>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>From</Table.Th>
+            <Table.Th>Message</Table.Th>
+            <Table.Th>Timestamp</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
+          {rows}
+        </Table.Tbody>
+      </Table>
+    </ScrollArea>
   )
 };
 

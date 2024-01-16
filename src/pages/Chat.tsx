@@ -1,6 +1,6 @@
 //@ts-check
 import React, { useEffect } from 'react';
-import { Grid } from '@mantine/core';
+import { Grid, Stack } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import useChat from '../hooks/useChat';
@@ -20,10 +20,12 @@ const Chat = () => {
   }, [userState]);
   return (
     <Shell>
-      <Grid justify="center" gutter={6} columns={12}>
-        <Grid.Col>
-          <ChatMessages />
-          <MessageSender sendMessage={chat.commands.sendMessage}></MessageSender>
+      <Grid justify="center" align="center" gutter={6} columns={12}>
+        <Grid.Col span={10}>
+          <Stack>
+            <ChatMessages />
+            <MessageSender sendMessage={chat.commands.sendMessage}></MessageSender>
+          </Stack>
         </Grid.Col>
       </Grid>
     </Shell>
