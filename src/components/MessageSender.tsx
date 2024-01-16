@@ -3,14 +3,14 @@ import React, { useRef, useState } from 'react';
 import { Button, Grid, TextInput } from '@mantine/core';
 
 interface MessageSenderProps {
-  sendMessage:(message:string)=>void
+  sendMessage: (message: string) => void
 }
 
-const MessageSender = (props:MessageSenderProps) => {
+const MessageSender = (props: MessageSenderProps) => {
   const sendMessage = props.sendMessage;
-  const ref = useRef<HTMLInputElement|null>(null);
+  const ref = useRef<HTMLInputElement | null>(null);
   const [value, setValue] = useState<string>('');
-  const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (value && value.length > 0) {
       sendMessage(value);

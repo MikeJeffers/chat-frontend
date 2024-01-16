@@ -1,12 +1,10 @@
 //@ts-check
-import React, {PropsWithChildren} from 'react';
+import React, { PropsWithChildren } from 'react';
 import { AppShell, Burger, Stack, Grid, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Link } from 'react-router-dom';
 
-interface ShellProps {}
-
-const App = (props:PropsWithChildren<ShellProps>) => {
+const App = (props: PropsWithChildren) => {
   const [opened, { toggle }] = useDisclosure();
   return (
     <AppShell
@@ -28,10 +26,10 @@ const App = (props:PropsWithChildren<ShellProps>) => {
         </Grid>
       </AppShell.Header>
       <AppShell.Navbar hidden={!opened} p="xs">
-      <Stack>
+        <Stack>
           <Link to="/register" style={{ textDecoration: 'none' }}><Button fullWidth>Register</Button></Link>
           <Link to="/login" style={{ textDecoration: 'none' }}><Button fullWidth>Login</Button></Link>
-          <Link to="/chat" style={{ textDecoration: 'none' }}><Button fullWidth>Play</Button></Link>
+          <Link to="/chat" style={{ textDecoration: 'none' }}><Button fullWidth>Chat</Button></Link>
         </Stack>
       </AppShell.Navbar>
       <AppShell.Main>

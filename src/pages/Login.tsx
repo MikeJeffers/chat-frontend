@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 
 const headers = { 'Content-Type': 'application/json' };
 
-const loginUser = async (username:string, password:string) => {
+const loginUser = async (username: string, password: string) => {
   try {
     const response = await axios.post(`http://localhost:3000/login`, { username, password }, { headers });
     return response.data;
@@ -26,13 +26,13 @@ function Login() {
   const [password, setPassword] = useState('');
 
 
-  const handleLogin = async (e:any) => {
+  const handleLogin = async (e: any) => {
     setLoading(true);
     e.preventDefault();
     try {
       const data = await loginUser(username, password);
       if (data && data.token && data.user) {
-        dispatch.user.SET({token:data.token, name:data.user.username, id:data.user.id});
+        dispatch.user.SET({ token: data.token, name: data.user.username, id: data.user.id });
         navigate('/chat');
       }
     } catch (err) {
@@ -48,8 +48,8 @@ function Login() {
         <SimpleGrid cols={1}>
           <LoadingOverlay visible={loading} />
           <h1>Login</h1>
-            <TextInput label="Username" onChange={(e) => setUsername(e.target.value)} />
-            <PasswordInput label="Password" onChange={(e) => setPassword(e.target.value)} />
+          <TextInput label="Username" onChange={(e) => setUsername(e.target.value)} />
+          <PasswordInput label="Password" onChange={(e) => setPassword(e.target.value)} />
           <Group grow>
             <Button onClick={handleLogin}>Login</Button>
           </Group>

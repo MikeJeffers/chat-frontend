@@ -9,7 +9,7 @@ import { RootState } from '../store';
 
 const headers = { 'Content-Type': 'application/json' };
 
-const registerUser = async (username:string, password:string) => {
+const registerUser = async (username: string, password: string) => {
   try {
     const response = await axios.post(`http://localhost:3000/register`, { username, password }, { headers });
     return response.data;
@@ -33,7 +33,7 @@ function Register() {
     try {
       const data = await registerUser(username, password);
       if (data && data.token && data.user) {
-        dispatch.user.SET({token:data.token, name:data.user.username, id:data.user.id});
+        dispatch.user.SET({ token: data.token, name: data.user.username, id: data.user.id });
         navigate('/chat');
       }
     } catch (err) {
@@ -49,8 +49,8 @@ function Register() {
         <SimpleGrid cols={1}>
           <LoadingOverlay visible={loading} />
           <h1>Register</h1>
-            <TextInput label="Username" onChange={(e) => setUsername(e.target.value)} />
-            <PasswordInput label="Password" onChange={(e) => setPassword(e.target.value)} />
+          <TextInput label="Username" onChange={(e) => setUsername(e.target.value)} />
+          <PasswordInput label="Password" onChange={(e) => setPassword(e.target.value)} />
           <Group grow>
             <Button onClick={handleRegister}>Register</Button>
           </Group>

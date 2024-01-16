@@ -11,7 +11,7 @@ import { UserModel } from "../models/user";
 const SOCKET_SERVER_URL = `ws://${location.hostname}:8077`; //TODO make this lintable
 
 
-const buildChat = (token:string, sockId:string, name:string, dispatch: Dispatch) => {
+const buildChat = (token: string, sockId: string, name: string, dispatch: Dispatch) => {
   const ws = new WebSocket(SOCKET_SERVER_URL);
   ws.onclose = (e) => {
     console.log(e)
@@ -25,13 +25,13 @@ const buildChat = (token:string, sockId:string, name:string, dispatch: Dispatch)
     console.log(e);
     console.log('CONNECTION ESTABLISHED');
     console.log("Sending token:", token)
-    send(ws, "AUTH", sockId, { token, name});
+    send(ws, "AUTH", sockId, { token, name });
   };
   ws.onmessage = messageHandler(dispatch);
   return ws;
 };
 
-const messageHandler = (dispatch:Dispatch) => (event:{data:string}) => {
+const messageHandler = (dispatch: Dispatch) => (event: { data: string }) => {
   let data;
   try {
     data = JSON.parse(event.data);
@@ -89,13 +89,13 @@ const useChat = (user: UserModel) => {
   }, [dispatch, sockId, user.name]);
 
 
-  const socketSend = (command:string, data:Object) => {
-    if(socketRef.current){
+  const socketSend = (command: string, data: object) => {
+    if (socketRef.current) {
       send(socketRef.current, command, sockId, data);
     }
   }
 
-  const sendMessage = (message:string) => {
+  const sendMessage = (message: string) => {
     if (!message || !message.length) { return; }
     socketSend('SEND_MESSAGE', { message });
   };

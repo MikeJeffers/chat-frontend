@@ -18,7 +18,7 @@ export const user = createModel<RootModel>()({
     token: ''
   } as UserState,
   reducers: {
-    SET: (state: UserState, payload: {token:string, id:string, name:string}) => {
+    SET: (state: UserState, payload: { token: string, id: string, name: string }) => {
       return Object.assign({}, state, payload);
     }
   }

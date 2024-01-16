@@ -1,5 +1,5 @@
 //@ts-check
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Table } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
