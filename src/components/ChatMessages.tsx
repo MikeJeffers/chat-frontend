@@ -1,5 +1,5 @@
 //@ts-check
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ScrollArea, Table } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
@@ -14,11 +14,18 @@ const chatRow = (message: string, from: string, at: string) => {
 }
 
 const ChatMessages = () => {
+  const chatViewport = useRef<HTMLDivElement>(null);
   const messages = useSelector((state: RootState) => state.chat.messages);
   const rows = messages.map(m => chatRow(m.message, m.from, m.at));
+  const scrollToBottom = () => {
+    if (chatViewport && chatViewport.current) {
+      chatViewport.current.scrollTo({ top: chatViewport.current.scrollHeight, behavior: 'smooth' });
+    }
+  };
+  useEffect(() => scrollToBottom(), [messages]);
   return (
-    <ScrollArea h={'50vh'} scrollbarSize={20} scrollHideDelay={2000}>
-      <Table>
+    <ScrollArea h={'50vh'} scrollbarSize={20} scrollHideDelay={2000} viewportRef={chatViewport}>
+      <Table striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
             <Table.Th>From</Table.Th>
