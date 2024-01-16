@@ -1,10 +1,11 @@
 //@ts-check
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Button, TextInput, PasswordInput, Center, Group, SimpleGrid, LoadingOverlay } from '@mantine/core';
 import { useNavigate } from "react-router-dom";
 import Shell from '../components/Shell';
 import { useDispatch } from 'react-redux';
+import { apiError, onError } from '../notifications';
 
 const headers = { 'Content-Type': 'application/json' };
 
@@ -12,8 +13,8 @@ const registerUser = async (username: string, password: string) => {
   try {
     const response = await axios.post(`http://localhost:3000/register`, { username, password }, { headers });
     return response.data;
-  } catch (err) {
-    console.log(err);
+  } catch (err:any) {
+    apiError(err);
   }
   return null;
 }

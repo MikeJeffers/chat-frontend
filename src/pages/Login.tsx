@@ -5,6 +5,7 @@ import { Button, TextInput, PasswordInput, Center, Group, SimpleGrid, LoadingOve
 import { useNavigate } from "react-router-dom";
 import Shell from '../components/Shell';
 import { useDispatch } from 'react-redux';
+import { apiError } from '../notifications';
 
 const headers = { 'Content-Type': 'application/json' };
 
@@ -12,8 +13,8 @@ const loginUser = async (username: string, password: string) => {
   try {
     const response = await axios.post(`http://localhost:3000/login`, { username, password }, { headers });
     return response.data;
-  } catch (err) {
-    console.log(err);
+  } catch (err:any) {
+    apiError(err);
   }
   return null;
 }

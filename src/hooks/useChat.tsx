@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { Dispatch } from '../store'
 import send from "./socketSender";
 import { UserModel } from "../models/user";
+import { onError } from "../notifications";
 
 
 // eslint-disable-next-line no-restricted-globals
@@ -65,6 +66,7 @@ const messageHandler = (dispatch: Dispatch) => (event: { data: string }) => {
       break;
     }
     case 'ERROR': {
+      onError(data.message);
       console.log(data.message);
       break;
     }

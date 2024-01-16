@@ -4,6 +4,7 @@ import '@mantine/notifications/styles.css';
 import React from 'react';
 import { Provider } from 'react-redux'
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import ReactDOM from 'react-dom/client';
 import {
   BrowserRouter,
@@ -23,6 +24,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <MantineProvider defaultColorScheme="dark">
+      <Notifications limit={5} />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Login />} />
