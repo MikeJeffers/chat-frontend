@@ -49,14 +49,9 @@ const messageHandler = (dispatch: Dispatch, server:ServerName) => (event: { data
   const command = data.command;
   console.log("RECV:", command, data)
   switch (command) {
-    case 'ACK': {
-      dispatch.chat.SET_MESSAGES({server, messages:data.messages});
-      dispatch.chat.SET_USERS({server, users:data.users});
-      break;
-    }
+    case 'ACK':
     case 'CHANNEL_INFO': {
-      dispatch.chat.SET_MESSAGES({server, messages:data.messages});
-      dispatch.chat.SET_USERS({server, users:data.users});
+      dispatch.chat.SET_CHANNEL_INFO({server, messages:data.messages, users:data.users});
       break;
     }
     case 'MESSAGE_ADD': {

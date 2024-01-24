@@ -19,7 +19,6 @@ const chatRow = (message: string, from: string, at: string) => {
 
 const ChatMessages = (props:ChatClientProps) => {
   const chatViewport = useRef<HTMLDivElement>(null);
-  const active = useSelector((state:RootState)=>state.active);
   const messages = useSelector((state: RootState) => state.chat[props.serverName].messages, {equalityFn:(a, b)=>{
     console.log(a, b)
     return a.length==b.length
@@ -30,7 +29,7 @@ const ChatMessages = (props:ChatClientProps) => {
       chatViewport.current.scrollTo({ top: chatViewport.current.scrollHeight, behavior: 'smooth' });
     }
   };
-  useEffect(() => scrollToBottom(), [messages, active]);
+  useEffect(() => scrollToBottom(), [messages]);
   return (
     <ScrollArea h={'50vh'} scrollbarSize={20} scrollHideDelay={2000} viewportRef={chatViewport}>
       <Table striped highlightOnHover>
