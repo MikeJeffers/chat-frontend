@@ -63,7 +63,6 @@ export const chat = createModel<RootModel>()({
       if (!validServer(state, payload.server)) {
         return state; // bad server string
       }
-      console.log(state[payload.server])
       if (state[payload.server].users.find((u) => u.id === payload.user.id)) {
         return state; // User already present in local state
       }
