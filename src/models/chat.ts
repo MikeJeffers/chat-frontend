@@ -20,37 +20,69 @@ type ChatState = {
 }
 
 
+type ChatServersState = {
+  node: ChatState,
+  python: ChatState
+}
+
+export type ServerName = 'node' | 'python';
+
+
 export const chat = createModel<RootModel>()({
   state: {
-    messages: [],
-    users: []
-  } as ChatState,
+    node: {
+      messages: [],
+      users: []
+    },
+    python: {
+      messages: [],
+      users: []
+    }
+  } as ChatServersState,
   reducers: {
-    SET_CHANNEL_INFO: (state: ChatState, payload: { messages: MessageModel[], users: UserModel[] }) => {
-      return Object.assign({}, state, payload);
+    SET_CHANNEL_INFO: (state: ChatServersState, payload: { server: ServerName, messages: MessageModel[], users: UserModel[] }) => {
+      if (Object.keys(state).includes(payload.server)) {
+        return state; // bad server string
+      }
+      return Object.assign({}, state, { [payload.server]: { messages: payload.messages, users: payload.users } });
     },
-    SET_MESSAGES: (state: ChatState, messages: MessageModel[]) => {
-      return Object.assign({}, state, { messages });
+    SET_MESSAGES: (state: ChatServersState, payload: { server: ServerName, messages: MessageModel[] }) => {
+      if (Object.keys(state).includes(payload.server)) {
+        return state; // bad server string
+      }
+      return Object.assign({}, state, { [payload.server]: { messages: payload.messages, users: state[payload.server].users } });
     },
-    SET_USERS: (state: ChatState, users: UserModel[]) => {
-      return Object.assign({}, state, { users });
+    SET_USERS: (state: ChatServersState, payload: { server: ServerName, users: UserModel[] }) => {
+      if (Object.keys(state).includes(payload.server)) {
+        return state; // bad server string
+      }
+      return Object.assign({}, state, { [payload.server]: { messages: state[payload.server].messages, users: payload.users } });
     },
-    USER_JOIN: (state: ChatState, user: UserModel) => {
-      console.log(state.users)
-      if (state.users.find((u) => u.id === user.id)) {
+    USER_JOIN: (state: ChatServersState, payload: { server: ServerName, user: UserModel }) => {
+      if (Object.keys(state).includes(payload.server)) {
+        return state; // bad server string
+      }
+      console.log(state[payload.server])
+      if (state[payload.server].users.find((u) => u.id === payload.user.id)) {
         return state; // User already present in local state
       }
-      return Object.assign({}, state, { users: [...state.users, user] });
+      return Object.assign({}, state, { [payload.server]: { messages: state[payload.server].messages, users: [...state[payload.server].users, payload.user] } });
     },
-    USER_LEAVE: (state: ChatState, user: UserModel) => {
-      const filtered = state.users.filter(u => u.id !== user.id);
-      if (filtered.length === state.users.length) {
+    USER_LEAVE: (state: ChatServersState, payload: { server: ServerName, user: UserModel }) => {
+      if (Object.keys(state).includes(payload.server)) {
+        return state; // bad server string
+      }
+      const filtered = state[payload.server].users.filter(u => u.id !== payload.user.id);
+      if (filtered.length === state[payload.server].users.length) {
         return state; // User must not be in local state
       }
-      return Object.assign({}, state, { users: filtered });
+      return Object.assign({}, state, { [payload.server]: { messages: state[payload.server].messages, users: filtered } });
     },
-    APPEND_MESSAGE: (state: ChatState, message: MessageModel) => {
-      return Object.assign({}, state, { messages: [...state.messages, message] });
+    APPEND_MESSAGE: (state: ChatServersState, payload: { server: ServerName, message: MessageModel }) => {
+      if (Object.keys(state).includes(payload.server)) {
+        return state; // bad server string
+      }
+      return Object.assign({}, state, { [payload.server]: { users: state[payload.server].users, messages: [...state[payload.server].messages, payload.message] } });
     }
   }
-})
+});

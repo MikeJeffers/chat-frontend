@@ -15,7 +15,7 @@ import { store } from './store'
 import FourOFour from './pages/FourOFour';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Chat from './pages/Chat';
+import ChatTabs from './pages/ChatTabs';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,7 +30,7 @@ root.render(
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/chat" element={<Chat />} />
+            <Route path="/chat" element={<ChatTabs />} />
             <Route path="*" element={<FourOFour />} />
           </Routes>
         </BrowserRouter>

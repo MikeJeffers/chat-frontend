@@ -6,14 +6,20 @@ import { Dispatch } from '../store'
 import send from "./socketSender";
 import { UserModel } from "../models/user";
 import { onError } from "../notifications";
+import { ServerName } from "../models/chat";
 
+type PortMap = {
+  [name in ServerName]: number;
+};
+const serverPortMap = {
+  node:8077,
+  python:8078
+} as PortMap
 
-// eslint-disable-next-line no-restricted-globals
-const SOCKET_SERVER_URL = `ws://${location.hostname}:8077`; //TODO make this lintable
-
-
-const buildChat = (token: string, sockId: string, name: string, dispatch: Dispatch) => {
-  const ws = new WebSocket(SOCKET_SERVER_URL);
+const buildChat = (token: string, sockId: string, name: string, dispatch: Dispatch, chatServerName: ServerName) => {
+  // eslint-disable-next-line no-restricted-globals
+  const serverUrl = `ws://${location.hostname}:${serverPortMap[chatServerName]}`; //TODO make this lintable
+  const ws = new WebSocket(serverUrl);
   ws.onclose = (e) => {
     console.log(e)
     console.log('CONNECTION CLOSED');
@@ -28,11 +34,11 @@ const buildChat = (token: string, sockId: string, name: string, dispatch: Dispat
     console.log("Sending token:", token)
     send(ws, "AUTH", sockId, { token, name });
   };
-  ws.onmessage = messageHandler(dispatch);
+  ws.onmessage = messageHandler(dispatch, chatServerName);
   return ws;
 };
 
-const messageHandler = (dispatch: Dispatch) => (event: { data: string }) => {
+const messageHandler = (dispatch: Dispatch, server:ServerName) => (event: { data: string }) => {
   let data;
   try {
     data = JSON.parse(event.data);
@@ -44,25 +50,25 @@ const messageHandler = (dispatch: Dispatch) => (event: { data: string }) => {
   console.log("RECV:", command, data)
   switch (command) {
     case 'ACK': {
-      dispatch.chat.SET_MESSAGES(data.messages);
-      dispatch.chat.SET_USERS(data.users);
+      dispatch.chat.SET_MESSAGES({server, messages:data.messages});
+      dispatch.chat.SET_USERS({server, users:data.users});
       break;
     }
     case 'CHANNEL_INFO': {
-      dispatch.chat.SET_MESSAGES(data.messages);
-      dispatch.chat.SET_USERS(data.users);
+      dispatch.chat.SET_MESSAGES({server, messages:data.messages});
+      dispatch.chat.SET_USERS({server, users:data.users});
       break;
     }
     case 'MESSAGE_ADD': {
-      dispatch.chat.APPEND_MESSAGE(data.message);
+      dispatch.chat.APPEND_MESSAGE({server, message:data.message});
       break;
     }
     case 'USER_LEAVE': {
-      dispatch.chat.USER_LEAVE(data.user);
+      dispatch.chat.USER_LEAVE({server, user:data.user});
       break;
     }
     case 'USER_JOIN': {
-      dispatch.chat.USER_JOIN(data.user);
+      dispatch.chat.USER_JOIN({server, user:data.user});
       break;
     }
     case 'ERROR': {
@@ -77,13 +83,13 @@ const messageHandler = (dispatch: Dispatch) => (event: { data: string }) => {
   }
 };
 
-const useChat = (user: UserModel) => {
+const useChat = (user: UserModel, chatServerName:ServerName) => {
   const dispatch = useDispatch<Dispatch>();
   const sockId = uuid();
   const socketRef = useRef<WebSocket>();
 
   useEffect(() => {
-    const ws = buildChat(user.token, sockId, user.name, dispatch);
+    const ws = buildChat(user.token, sockId, user.name, dispatch, chatServerName);
     socketRef.current = ws;
     return () => {
       socketRef.current?.close();
