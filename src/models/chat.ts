@@ -62,8 +62,7 @@ export const chat = createModel<RootModel>()({
     USER_JOIN: (state: ChatServersState, payload: { server: ServerName, user: UserModel }) => {
       if (!validServer(state, payload.server)) {
         return state; // bad server string
-      }
-      if (state[payload.server].users.find((u) => u.id === payload.user.id)) {
+      } else if (state[payload.server].users.find((u) => u.id === payload.user.id)) {
         return state; // User already present in local state
       }
       return Object.assign({}, state, { [payload.server]: { messages: state[payload.server].messages, users: [...state[payload.server].users, payload.user] } });
