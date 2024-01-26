@@ -19,10 +19,7 @@ const chatRow = (message: string, from: string, at: string) => {
 
 const ChatMessages = (props:ChatClientProps) => {
   const chatViewport = useRef<HTMLDivElement>(null);
-  const messages = useSelector((state: RootState) => state.chat[props.serverName].messages, {equalityFn:(a, b)=>{
-    console.log(a, b)
-    return a.length==b.length
-}});
+  const messages = useSelector((state: RootState) => state.chat[props.serverName].messages);
   const rows = messages.map((m) => chatRow(m.message, m.from, m.at));
   const scrollToBottom = () => {
     if (chatViewport && chatViewport.current) {

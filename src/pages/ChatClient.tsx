@@ -8,12 +8,13 @@ import MessageSender from '../components/MessageSender';
 import ChatMessages from '../components/ChatMessages';
 import { useNavigate } from 'react-router-dom';
 import { ServerName } from '../models/chat';
+import ChatMembers from '../components/ChatMembers';
 
 interface ChatClientProps {
   serverName: ServerName
 }
 
-const ChatClient = (props:ChatClientProps) => {
+const ChatClient = (props: ChatClientProps) => {
   const navigate = useNavigate();
   const userState = useSelector((state: RootState) => state.user);
   const chat = useChat(userState, props.serverName);
@@ -23,14 +24,17 @@ const ChatClient = (props:ChatClientProps) => {
     }
   }, [userState]);
   return (
-      <Grid justify="center" align="center" gutter={6} columns={12}>
-        <Grid.Col span={10}>
-          <Stack>
-            <ChatMessages serverName={props.serverName}/>
-            <MessageSender sendMessage={chat.commands.sendMessage}></MessageSender>
-          </Stack>
-        </Grid.Col>
-      </Grid>
+    <Grid justify="center" gutter={6} columns={12}>
+      <Grid.Col span={8}>
+        <Stack>
+          <ChatMessages serverName={props.serverName} />
+          <MessageSender sendMessage={chat.commands.sendMessage}></MessageSender>
+        </Stack>
+      </Grid.Col>
+      <Grid.Col span={2}>
+        <ChatMembers serverName={props.serverName} />
+      </Grid.Col>
+    </Grid>
   )
 };
 
