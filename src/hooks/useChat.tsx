@@ -12,8 +12,9 @@ type PortMap = {
   [name in ServerName]: number;
 };
 const serverPortMap = {
-  node:8077,
-  python:8078
+  node: 8077,
+  python: 8078,
+  go: 8079
 } as PortMap
 
 const buildChat = (token: string, sockId: string, name: string, dispatch: Dispatch, chatServerName: ServerName) => {
@@ -38,7 +39,7 @@ const buildChat = (token: string, sockId: string, name: string, dispatch: Dispat
   return ws;
 };
 
-const messageHandler = (dispatch: Dispatch, server:ServerName) => (event: { data: string }) => {
+const messageHandler = (dispatch: Dispatch, server: ServerName) => (event: { data: string }) => {
   let data;
   try {
     data = JSON.parse(event.data);
@@ -51,19 +52,19 @@ const messageHandler = (dispatch: Dispatch, server:ServerName) => (event: { data
   switch (command) {
     case 'ACK':
     case 'CHANNEL_INFO': {
-      dispatch.chat.SET_CHANNEL_INFO({server, messages:data.messages, users:data.users});
+      dispatch.chat.SET_CHANNEL_INFO({ server, messages: data.messages, users: data.users });
       break;
     }
     case 'MESSAGE_ADD': {
-      dispatch.chat.APPEND_MESSAGE({server, message:data.message});
+      dispatch.chat.APPEND_MESSAGE({ server, message: data.message });
       break;
     }
     case 'USER_LEAVE': {
-      dispatch.chat.USER_LEAVE({server, user:data.user});
+      dispatch.chat.USER_LEAVE({ server, user: data.user });
       break;
     }
     case 'USER_JOIN': {
-      dispatch.chat.USER_JOIN({server, user:data.user});
+      dispatch.chat.USER_JOIN({ server, user: data.user });
       break;
     }
     case 'ERROR': {
@@ -78,7 +79,7 @@ const messageHandler = (dispatch: Dispatch, server:ServerName) => (event: { data
   }
 };
 
-const useChat = (user: UserModel, chatServerName:ServerName) => {
+const useChat = (user: UserModel, chatServerName: ServerName) => {
   const dispatch = useDispatch<Dispatch>();
   const sockId = uuid();
   const socketRef = useRef<WebSocket>();

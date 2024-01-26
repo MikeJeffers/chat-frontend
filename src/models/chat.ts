@@ -22,10 +22,11 @@ type ChatState = {
 
 type ChatServersState = {
   node: ChatState,
-  python: ChatState
+  python: ChatState,
+  go: ChatState
 }
 
-export type ServerName = 'node' | 'python';
+export type ServerName = 'node' | 'python' | 'go';
 
 const validServer = (state: ChatServersState, server: ServerName) => Object.keys(state).includes(server);
 
@@ -36,6 +37,10 @@ export const chat = createModel<RootModel>()({
       users: []
     },
     python: {
+      messages: [],
+      users: []
+    },
+    go: {
       messages: [],
       users: []
     }
