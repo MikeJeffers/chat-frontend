@@ -1,18 +1,19 @@
 //@ts-check
 import React, { PropsWithChildren } from 'react';
-import { AppShell, Burger, Stack, Grid, Button } from '@mantine/core';
+import { AppShell, Burger, Grid, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const App = (props: PropsWithChildren) => {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle }] = useDisclosure(true);
+  const navigate = useNavigate();
   return (
     <AppShell
       padding="md"
       offsetScrollbars={false}
       header={{ height: 64 }}
       navbar={{
-        width: 120,
+        width: 240,
         breakpoint: 'xs',
         collapsed: { desktop: !opened, mobile: !opened }
       }}>
@@ -25,12 +26,10 @@ const App = (props: PropsWithChildren) => {
           </Grid.Col>
         </Grid>
       </AppShell.Header>
-      <AppShell.Navbar hidden={!opened} p="xs">
-        <Stack>
-          <Link to="/register" style={{ textDecoration: 'none' }}><Button fullWidth>Register</Button></Link>
-          <Link to="/login" style={{ textDecoration: 'none' }}><Button fullWidth>Login</Button></Link>
-          <Link to="/chat" style={{ textDecoration: 'none' }}><Button fullWidth>Chat</Button></Link>
-        </Stack>
+      <AppShell.Navbar hidden={!opened} p="md">
+        <NavLink onClick={() => { navigate('/register') }} active={window.location.pathname === '/register'} label={"Register"} description={"Register a new account"} />
+        <NavLink onClick={() => { navigate('/login') }} active={window.location.pathname === '/login'} label={"Login"} description={"Login to chat"} /> 
+        <NavLink onClick={() => { navigate('/chat') }} active={window.location.pathname === '/chat'} label={"Chat"} description={"Join the chat!"} />
       </AppShell.Navbar>
       <AppShell.Main>
         {props.children}
